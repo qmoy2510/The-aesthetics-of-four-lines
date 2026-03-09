@@ -1,0 +1,214 @@
+.fretboard-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(2, 44, 34, 0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(12px);
+    overflow-x: auto;
+    position: relative;
+}
+
+.fretboard-row {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.fret-numbers {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.fret-cell {
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 60px;
+}
+
+.open-string-cell {
+    flex: 0 0 80px;
+    min-width: 80px;
+    border-right: 6px solid #d1d5db;
+    /* The Nut */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px 0 0 8px;
+}
+
+.header {
+    height: 30px;
+    border: none !important;
+    background: transparent !important;
+}
+
+.fret-marker-dot {
+    position: absolute;
+    bottom: -20px;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.fret-marker-dot.double {
+    display: flex;
+    gap: 8px;
+    background-color: transparent;
+}
+
+.fret-marker-dot.double::before,
+.fret-marker-dot.double::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+}
+
+.string-row {
+    margin-bottom: 0;
+    background: rgba(6, 78, 59, 0.3);
+    /* dark emerald */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.string-row:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 0;
+}
+
+.string-row:first-of-type {
+    border-radius: 0 8px 0 0;
+}
+
+/* Base style for fret area */
+.standard-fret {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-right: 2px solid #9ca3af;
+    /* Fret wire */
+}
+
+.standard-fret:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.standard-fret:last-child {
+    border-right: none;
+}
+
+/* The actual string visual */
+.string-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(to bottom, #d1d5db, #9ca3af, #d1d5db);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* String thicknesses */
+.string-line-1 {
+    height: 2px;
+}
+
+/* G string - thinnest */
+.string-line-2 {
+    height: 3px;
+}
+
+/* D string */
+.string-line-3 {
+    height: 4px;
+}
+
+/* A string */
+.string-line-4 {
+    height: 5px;
+}
+
+/* E string - thickest */
+
+/* Fret Wire */
+.fret-wire {
+    position: absolute;
+    right: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to right, #9ca3af, #d1d5db, #9ca3af);
+    z-index: 2;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+/* Note Display Badge */
+.note-badge {
+    position: relative;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--glass-border);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.note-badge.highlighted {
+    opacity: 1;
+    transform: scale(1);
+    background: var(--primary);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.standard-fret:hover .note-badge:not(.highlighted):not(.quiz-mode) {
+    opacity: 0.5;
+    transform: scale(0.9);
+}
+
+/* For open strings (Nut cells) */
+.open-string-cell .note-badge {
+    opacity: 1;
+    transform: scale(1);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.open-string-cell .note-badge.quiz-mode:not(.highlighted) {
+    color: transparent;
+    /* Hide text in quiz mode for open strings until clicked */
+}
+
+.open-string-cell .note-badge.highlighted {
+    background: var(--primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--primary-glow);
+    color: white;
+    /* Ensure text is visible when highlighted */
+}
