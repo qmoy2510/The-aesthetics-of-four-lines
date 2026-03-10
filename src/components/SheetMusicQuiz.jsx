@@ -140,7 +140,7 @@ const SheetMusicQuiz = () => {
         return (
             <div style={{ width: '100%', overflowX: 'auto', margin: '2rem 0', display: 'flex', justifyContent: 'center' }}>
                 <svg
-                    width="600" height="200" viewBox="0 0 600 200"
+                    width="100%" height="auto" viewBox="0 0 600 200"
                     className={isShaking ? 'shake' : ''}
                     style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--glass-border)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)' }}
                 >

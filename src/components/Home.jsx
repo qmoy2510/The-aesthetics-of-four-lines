@@ -65,7 +65,7 @@ const Home = () => {
                         <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>단계별로 베이스 지판을 정복할 수 있는 최적화된 도구들을 제공합니다.</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
                         <FeatureCard
                             title="베이스 지판 학습"
                             description="인터랙티브 가상 지판을 통해 E, A, D, G 줄의 12프렛까지 모든 음계를 시각적으로 확인하고 외울 수 있습니다."

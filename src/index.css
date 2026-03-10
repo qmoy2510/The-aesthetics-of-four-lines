@@ -233,3 +233,48 @@ button {
 .delay-300 {
   animation-delay: 300ms;
 }
+
+/* ==========================================================================
+   Responsive Utilities (Mobile First Approach)
+   ========================================================================== */
+
+/* Show only on mobile (hidden on desktop) */
+.mobile-only {
+  display: block;
+}
+
+/* Hidden by default on mobile, shown on desktop */
+.hidden-mobile {
+  display: none;
+}
+
+/* Desktop and tablet landscape (min-width: 768px) */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  .hidden-mobile {
+    display: block !important;
+  }
+}
+
+/* Base mobile overrides */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+  }
+
+  h2 {
+    font-size: 2rem !important;
+  }
+
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem !important;
+  }
+}

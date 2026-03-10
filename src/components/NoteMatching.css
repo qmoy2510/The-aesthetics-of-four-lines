@@ -118,3 +118,42 @@
 .shake {
     animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
 }
+
+/* ==========================================================================
+   Mobile Responsiveness for Piano Keyboard
+   ========================================================================== */
+@media (max-width: 768px) {
+    .piano-keyboard {
+        padding: 1rem 0.5rem;
+        gap: 2px;
+    }
+
+    .piano-key.white-key {
+        width: 44px;
+        height: 160px;
+    }
+
+    .piano-key.white-key.active:active {
+        height: 156px;
+    }
+
+    .key-label {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .piano-key.black-key {
+        width: 30px;
+        height: 100px;
+        right: -16px;
+    }
+
+    .piano-key.black-key.active:active {
+        height: 98px;
+    }
+
+    .black-label {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+}

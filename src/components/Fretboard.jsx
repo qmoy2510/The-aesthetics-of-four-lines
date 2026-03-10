@@ -5,14 +5,30 @@ import './Fretboard.css';
 // Notes array (chromatic scale)
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-// Tuning for standard 4-string bass (G, D, A, E - from highest pitch to lowest pitch string)
-// We represent strings from top to bottom on screen: 1st string (G) to 4th string (E)
-const TUNING = [
-    { note: 'G', stringName: '1st (G)' },
-    { note: 'D', stringName: '2nd (D)' },
-    { note: 'A', stringName: '3rd (A)' },
-    { note: 'E', stringName: '4th (E)' }
-];
+// Tuning base for 4, 5, and 6-string basses (from highest pitch to lowest pitch string)
+const TUNING_PRESETS = {
+    4: [
+        { note: 'G', stringName: '1st (G)' },
+        { note: 'D', stringName: '2nd (D)' },
+        { note: 'A', stringName: '3rd (A)' },
+        { note: 'E', stringName: '4th (E)' }
+    ],
+    5: [
+        { note: 'G', stringName: '1st (G)' },
+        { note: 'D', stringName: '2nd (D)' },
+        { note: 'A', stringName: '3rd (A)' },
+        { note: 'E', stringName: '4th (E)' },
+        { note: 'B', stringName: '5th (B)' }
+    ],
+    6: [
+        { note: 'C', stringName: '1st (C)' },
+        { note: 'G', stringName: '2nd (G)' },
+        { note: 'D', stringName: '3rd (D)' },
+        { note: 'A', stringName: '4th (A)' },
+        { note: 'E', stringName: '5th (E)' },
+        { note: 'B', stringName: '6th (B)' }
+    ]
+};
 
 const NUMBER_OF_FRETS = 12;
 
@@ -23,8 +39,9 @@ const getNoteAtFret = (openNote, fretIndex) => {
 };
 
 // Generate full fretboard data
-const generateFretboardContext = () => {
-    return TUNING.map((stringInfo) => {
+const generateFretboardContext = (stringCount) => {
+    const tuning = TUNING_PRESETS[stringCount] || TUNING_PRESETS[4];
+    return tuning.map((stringInfo) => {
         const stringNotes = [];
         for (let i = 0; i <= NUMBER_OF_FRETS; i++) {
             stringNotes.push({
@@ -36,8 +53,8 @@ const generateFretboardContext = () => {
     });
 };
 
-const Fretboard = ({ highlightedNote, isQuizMode, onNoteClick }) => {
-    const fretboardData = generateFretboardContext();
+const Fretboard = ({ highlightedNote, isQuizMode, onNoteClick, stringCount = 4 }) => {
+    const fretboardData = generateFretboardContext(stringCount);
 
     // Fret markers (dots) on bass: usually at frets 3, 5, 7, 9, 12
     const fretMarkers = [3, 5, 7, 9, 12];

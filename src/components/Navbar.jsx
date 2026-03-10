@@ -92,7 +92,9 @@ const Navbar = () => {
                         position: 'absolute', top: '100%', left: 0, right: 0,
                         padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem',
                         borderTop: '1px solid var(--glass-border)',
-                        borderRadius: '0 0 var(--radius-lg) var(--radius-lg)'
+                        borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
+                        zIndex: 100, /* Fix: Ensure dropdown is visible over content */
+                        backgroundColor: 'rgba(2, 44, 34, 0.95)' /* Fix: Solid background so it's not transparent */
                     }}
                 >
                     {navLinks.map((link) => (
@@ -118,13 +120,6 @@ const Navbar = () => {
                 </div>
             )}
 
-            {/* Adding a quick inline style for mobile responsiveness since we aren't using Tailwind fully */}
-            <style>{`
-        @media (min-width: 768px) {
-          .hidden-mobile { display: block !important; }
-          .mobile-only { display: none !important; }
-        }
-      `}</style>
         </nav>
     );
 };

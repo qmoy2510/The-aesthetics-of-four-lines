@@ -142,7 +142,15 @@
     height: 5px;
 }
 
-/* E string - thickest */
+/* Low B string */
+.string-line-5 {
+    height: 6px;
+}
+
+/* Low E/B string for 6 strings */
+.string-line-6 {
+    height: 7px;
+}
 
 /* Fret Wire */
 .fret-wire {
@@ -211,4 +219,44 @@
     box-shadow: 0 0 15px var(--primary-glow);
     color: white;
     /* Ensure text is visible when highlighted */
+}
+
+/* ==========================================================================
+   Mobile Responsiveness for Fretboard
+   ========================================================================== */
+@media (max-width: 768px) {
+    .fretboard-container {
+        padding: 1rem 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    /* Provide a visual cue that it can be scrolled */
+    .fretboard-container::after {
+        content: "👉 스와이프하여 탐색";
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .fret-cell {
+        min-width: 50px;
+        height: 50px;
+    }
+
+    .open-string-cell {
+        min-width: 60px;
+        flex: 0 0 60px;
+    }
+
+    .note-badge {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
 }
