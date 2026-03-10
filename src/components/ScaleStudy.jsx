@@ -87,8 +87,8 @@ const generateQuizPath = (root, scaleNotes, stringCount) => {
         if (!foundNext) {
             for (let s = currentSIdx; s >= 0; s--) {
                 const openNote = tuning[s].note;
-                for (let f = 1; f <= 12; f++) {
-                    // Still enforce pitch ascending
+                for (let f = 1; f <= 15; f++) { // Search a wider range up to fret 15
+                    // Must strictly be higher pitch (either lower string index, or higher fret on same string)
                     if (s === currentSIdx && f <= currentFIdx) continue;
 
                     if (getNoteAtFret(openNote, f) === targetNote) {
@@ -108,7 +108,7 @@ const generateQuizPath = (root, scaleNotes, stringCount) => {
     let finalRootFound = false;
     for (let s = currentSIdx; s >= 0; s--) {
         const openNote = tuning[s].note;
-        for (let f = 1; f <= 12; f++) {
+        for (let f = 1; f <= 15; f++) { // Extend range
             if (s === currentSIdx && f <= currentFIdx) continue;
             if (getNoteAtFret(openNote, f) === root) {
                 path.push({ sIdx: s, fIdx: f, note: root });
@@ -131,6 +131,8 @@ const ScaleStudy = () => {
 
     // Quiz State
     const [isQuizMode, setIsQuizMode] = useState(false);
+    const [quizRoot, setQuizRoot] = useState('');
+    const [quizScale, setQuizScale] = useState('');
     const [quizPath, setQuizPath] = useState([]);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [feedback, setFeedback] = useState(null);
@@ -138,13 +140,27 @@ const ScaleStudy = () => {
     const [highlightedNote, setHighlightedNote] = useState(null); // Used to show currently clicked/wrong notes
 
     useEffect(() => {
-        const notes = getScaleNotes(selectedRoot, selectedScale);
-        setScaleNotes(notes);
-    }, [selectedRoot, selectedScale]);
+        if (!isQuizMode) {
+            const notes = getScaleNotes(selectedRoot, selectedScale);
+            setScaleNotes(notes);
+        }
+    }, [selectedRoot, selectedScale, isQuizMode]);
 
-    const handleStartQuiz = () => {
-        const notes = getScaleNotes(selectedRoot, selectedScale);
-        const path = generateQuizPath(selectedRoot, notes, stringCount);
+    const handleStartQuiz = (isRandom = true) => {
+        let targetRoot = selectedRoot;
+        let targetScale = selectedScale;
+
+        if (isRandom) {
+            targetRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+            const scaleKeys = Object.keys(SCALES);
+            targetScale = scaleKeys[Math.floor(Math.random() * scaleKeys.length)];
+        }
+
+        setQuizRoot(targetRoot);
+        setQuizScale(targetScale);
+
+        const notes = getScaleNotes(targetRoot, targetScale);
+        const path = generateQuizPath(targetRoot, notes, stringCount);
 
         if (path.length > 0) {
             setQuizPath(path);
@@ -165,6 +181,8 @@ const ScaleStudy = () => {
         setCurrentStepIndex(0);
         setFeedback(null);
         setHighlightedNote(null);
+        setQuizRoot('');
+        setQuizScale('');
     };
 
     const handleNoteClick = (note, sIdx, fIdx) => {
@@ -293,15 +311,27 @@ const ScaleStudy = () => {
                                     {Object.keys(SCALES).map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
                             </div>
-
-                            <button onClick={handleStartQuiz} className="btn btn-primary" style={{ padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Play size={16} /> 퀴즈 시작
-                            </button>
                         </div>
 
                         <div style={{ textAlign: 'center', fontSize: '1.2rem', fontWeight: 700, marginTop: '0.5rem' }}>
                             <span className="text-gradient">{selectedRoot} {selectedScale}</span> 구성음:
                             <span style={{ color: 'var(--text-secondary)', marginLeft: '10px' }}>{scaleNotes.join(' - ')}</span>
+                        </div>
+
+                        {/* Divider */}
+                        <div style={{ height: '1px', background: 'var(--glass-border)', margin: '0.5rem 0' }}></div>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                            <button onClick={() => handleStartQuiz(false)} className="btn btn-outline" style={{
+                                padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                fontSize: '1.05rem', color: 'var(--text-primary)', borderColor: 'var(--glass-border)',
+                                background: 'rgba(255,255,255,0.05)'
+                            }}>
+                                <Target size={18} /> {selectedRoot} {selectedScale} 퀴즈
+                            </button>
+                            <button onClick={() => handleStartQuiz(true)} className="btn btn-primary" style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.05rem' }}>
+                                <Play size={18} /> 무작위 랜덤 퀴즈!
+                            </button>
                         </div>
                     </div>
                 )}
@@ -310,7 +340,7 @@ const ScaleStudy = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                                <span className="text-gradient">{selectedRoot} {selectedScale}</span> 퀴즈
+                                <span className="text-gradient">{quizRoot} {quizScale}</span> 퀴즈
                             </div>
                             <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
                                 단계: <strong style={{ color: 'var(--text-primary)' }}>{currentStepIndex + 1} / {quizPath.length}</strong>
@@ -334,10 +364,10 @@ const ScaleStudy = () => {
                             textAlign: 'center', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '0.5rem'
                         }}>
                             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                                다음 음을 누르세요
+                                다음 음을 누르세요 (블라인드)
                             </div>
-                            <div className="text-gradient" style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.2 }}>
-                                {quizPath[currentStepIndex]?.note}
+                            <div className="text-gradient" style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }}>
+                                ?
                             </div>
                         </div>
 
@@ -360,34 +390,14 @@ const ScaleStudy = () => {
             {/* Wrapper for Fretboard to handle custom highlighting logic in Scale Study */}
             <div className={`scale-board-wrapper ${isQuizMode ? 'quiz-active' : 'learning-active'}`}>
                 <Fretboard
-                    // In learn mode highlight, we don't pass a single Highlighted note, instead we use CSS to highlight many
-                    highlightedNote={highlightedNote}
+                    // In learn mode highlight, pass the array of scale notes to highlight them globally
+                    highlightedNote={isQuizMode ? highlightedNote : scaleNotes}
                     isQuizMode={isQuizMode}
+                    rootNote={isQuizMode ? null : selectedRoot}
                     onNoteClick={handleNoteClick}
                     stringCount={stringCount}
                 />
             </div>
-
-            {/* Inject custom CSS to highlight all scale notes when in learning mode */}
-            {!isQuizMode && scaleNotes.length > 0 && (
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                    .learning-active .fret-cell:not(.open-string-cell) .note-badge {
-                        ${scaleNotes.map(n => `
-                            /* Nasty but effective trick to show notes conditionally based on content */
-                        `).join('')}
-                        /* Show all notes in scale */
-                    }
-                    /* Let's do this cleaner using a data attribute or global class match */
-                    ${scaleNotes.map(note => `
-                        .learning-active .fret-cell:not(.open-string-cell) .note-badge:contains-not-supported {
-                            /* CSS :contains is not standard, we will match by mapping the note text */
-                        }
-                    `).join('')}
-                `}} />
-            )}
-
-            {/* Alternative to CSS injection: We need a reliable way to show multiple notes on Fretboard */}
         </div>
     );
 };

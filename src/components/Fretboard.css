@@ -200,11 +200,21 @@
 .note-badge.highlighted-wrong {
     opacity: 1;
     transform: scale(1) translate3d(0, 0, 0);
-    background: var(--danger, #ef4444);
+    background-color: var(--danger);
     border-color: #fca5a5;
     color: white;
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
     animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* Distinct styling for the root note when displaying a scale */
+.note-badge.is-root {
+    background-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+    border-color: #fcd34d;
+    transform: scale(1.1);
+    z-index: 2;
 }
 
 @keyframes shake {

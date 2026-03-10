@@ -53,11 +53,38 @@ const generateFretboardContext = (stringCount) => {
     });
 };
 
-const Fretboard = ({ highlightedNote, isQuizMode, onNoteClick, stringCount = 4 }) => {
+const Fretboard = ({
+    highlightedNote,
+    isQuizMode = false,
+    onNoteClick, // Keep onNoteClick as it's used in the original logic
+    stringCount = 4,
+    showNotes = true,
+    rootNote = null // Add rootNote prop to allow distinct styling
+}) => {
     const fretboardData = generateFretboardContext(stringCount);
 
     // Fret markers (dots) on bass: usually at frets 3, 5, 7, 9, 12
     const fretMarkers = [3, 5, 7, 9, 12];
+
+    // Helper function for note interaction (replaces direct onClick logic)
+    const handleNoteInteraction = (note, sIdx, fIdx) => {
+        if (fIdx === 0 && isQuizMode) return; // Disable interaction on nut in quiz mode
+        onNoteClick && onNoteClick(note, sIdx, fIdx);
+    };
+
+    // Helper function to render fret markers
+    const renderFretMarker = (sIdx, fIdx) => {
+        // Only render markers on the highest string (sIdx === 0) for simplicity, or adjust as needed
+        if (sIdx === 0) {
+            if (fretMarkers.includes(fIdx) && fIdx !== 12) {
+                return <div className="fret-marker-dot"></div>;
+            }
+            if (fIdx === 12) {
+                return <div className="fret-marker-dot double"></div>;
+            }
+        }
+        return null;
+    };
 
     return (
         <div className="fretboard-container glass-panel">
@@ -101,30 +128,38 @@ const Fretboard = ({ highlightedNote, isQuizMode, onNoteClick, stringCount = 4 }
                                 }
                             }
 
-                            const isNut = fIdx === 0; // The Open string / Nut area
+                            // Check if this is a root note (for scale learning)
+                            const isRoot = !isQuizMode && rootNote === fretInfo.note && isHighlighted;
 
                             // Determine which class to apply for highlighting
                             let highlightClass = '';
-                            if (isHighlighted) {
-                                highlightClass = isWrongHighlight ? 'highlighted-wrong' : 'highlighted';
+                            if (isWrongHighlight) {
+                                highlightClass = 'highlighted-wrong';
+                            } else if (isHighlighted) {
+                                highlightClass = 'highlighted';
                             }
+
+                            // Add a special class for the root note if applicable
+                            const rootClass = isRoot ? 'is-root' : '';
 
                             return (
                                 <div
                                     key={`fret-${sIdx}-${fIdx}`}
-                                    className={`fret-cell ${isNut ? 'open-string-cell' : 'standard-fret'} ${isQuizMode && isNut ? 'disabled-nut' : ''}`}
-                                    onClick={() => {
-                                        if (isQuizMode && isNut) return;
-                                        onNoteClick && onNoteClick(fretInfo.note, sIdx, fIdx);
-                                    }}
-                                    style={isQuizMode && isNut ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                                    className={`fret-cell ${fIdx === 0 ? 'open-string-cell' : ''}`}
+                                    style={fIdx === 0 && isQuizMode ? { opacity: 0.3, pointerEvents: 'none', cursor: 'not-allowed' } : {}}
+                                    onClick={() => handleNoteInteraction(fretInfo.note, sIdx, fIdx)}
                                 >
-                                    {/* Fret wire visual */}
-                                    {!isNut && <div className="fret-wire"></div>}
+                                    {/* Fret wire */}
+                                    {fIdx > 0 && <div className="fret-wire"></div>}
 
-                                    {/* The Note Button */}
-                                    <div className={`note-badge ${highlightClass} ${isQuizMode ? 'quiz-mode' : ''}`}>
-                                        {fretInfo.note}
+                                    {/* Fret markers (dots) */}
+                                    {renderFretMarker(sIdx, fIdx)}
+
+                                    {/* Note display */}
+                                    <div className={`note-badge ${highlightClass} ${rootClass} ${isQuizMode ? 'quiz-mode' : ''}`}>
+                                        <span className="note-text" style={{ opacity: (isHighlighted || !isQuizMode) && showNotes ? 1 : 0 }}>
+                                            {fretInfo.note}
+                                        </span>
                                     </div>
                                 </div>
                             );
