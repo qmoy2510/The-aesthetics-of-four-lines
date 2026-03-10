@@ -129,31 +129,31 @@
     }
 
     .piano-key.white-key {
-        width: 44px;
-        height: 160px;
+        width: 48px;
+        height: 180px;
     }
 
     .piano-key.white-key.active:active {
-        height: 156px;
+        height: 176px;
     }
 
     .key-label {
-        font-size: 1rem;
+        font-size: 1.1rem;
         margin-bottom: 0.75rem;
     }
 
     .piano-key.black-key {
-        width: 30px;
-        height: 100px;
-        right: -16px;
+        width: 34px;
+        height: 110px;
+        right: -18px;
     }
 
     .piano-key.black-key.active:active {
-        height: 98px;
+        height: 108px;
     }
 
     .black-label {
-        font-size: 0.8rem;
-        margin-bottom: 1rem;
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
     }
 }

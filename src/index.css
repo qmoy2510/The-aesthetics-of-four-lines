@@ -238,24 +238,21 @@ button {
    Responsive Utilities (Mobile First Approach)
    ========================================================================== */
 
-/* Show only on mobile (hidden on desktop) */
 .mobile-only {
-  display: block;
+  display: flex !important;
 }
 
-/* Hidden by default on mobile, shown on desktop */
 .hidden-mobile {
-  display: none;
+  display: none !important;
 }
 
-/* Desktop and tablet landscape (min-width: 768px) */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .mobile-only {
     display: none !important;
   }
 
   .hidden-mobile {
-    display: block !important;
+    display: flex !important;
   }
 }
 
