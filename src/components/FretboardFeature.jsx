@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Fretboard from './Fretboard';
+import Fretboard, { TUNING_PRESETS, getNoteAtFret } from './Fretboard';
 import { Target, Eye, EyeOff, RefreshCcw } from 'lucide-react';
 
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -26,8 +26,17 @@ const FretboardFeature = () => {
     };
 
     const pickRandomNote = () => {
-        const randomNote = NOTES[Math.floor(Math.random() * NOTES.length)];
-        setTargetNote(randomNote);
+        const sIdx = Math.floor(Math.random() * stringCount);
+        const fIdx = Math.floor(Math.random() * 12) + 1; // 1 ~ 12 (Excludes open strings)
+        const openNote = TUNING_PRESETS[stringCount][sIdx].note;
+        const noteName = getNoteAtFret(openNote, fIdx);
+
+        setTargetNote({
+            stringNumber: sIdx + 1,
+            sIdx,
+            fIdx,
+            noteName
+        });
     };
 
     const stopQuiz = () => {
@@ -43,8 +52,10 @@ const FretboardFeature = () => {
             return;
         }
 
+        if (fretIndex === 0) return; // Prevent open string selection in quiz mode
+
         // In quiz mode, evaluate the click
-        if (note === targetNote) {
+        if (targetNote && stringIndex === targetNote.sIdx && fretIndex === targetNote.fIdx) {
             setFeedback('정답입니다! 🎉');
 
             const newCorrect = score.correct + 1;
@@ -59,7 +70,7 @@ const FretboardFeature = () => {
                 localStorage.setItem(bestScoreKey, newCorrect.toString());
             }
 
-            setHighlightedNote(note);
+            setHighlightedNote({ sIdx: stringIndex, fIdx: fretIndex, isWrong: false });
 
             setTimeout(() => {
                 setHighlightedNote(null);
@@ -69,7 +80,7 @@ const FretboardFeature = () => {
         } else {
             const newWrongCount = score.wrong + 1;
             setScore(prev => ({ ...prev, total: prev.total + 1, wrong: newWrongCount }));
-            setHighlightedNote(note); // Highlight the wrong note briefly
+            setHighlightedNote({ sIdx: stringIndex, fIdx: fretIndex, isWrong: true }); // Highlight the wrong note briefly
 
             if (newWrongCount >= 3) {
                 setFeedback(`3번 틀렸습니다. 퀴즈가 종료됩니다! (최종 점수: ${score.correct}점)`);
@@ -77,7 +88,7 @@ const FretboardFeature = () => {
                     stopQuiz();
                 }, 2000);
             } else {
-                setFeedback(`틀렸습니다. ${targetNote}를 찾아보세요. (${newWrongCount}/3)`);
+                setFeedback(`틀렸습니다. ${targetNote?.stringNumber}번현 ${targetNote?.noteName}를 찾아보세요. (${newWrongCount}/3)`);
                 setTimeout(() => {
                     setHighlightedNote(null);
                 }, 500);
@@ -92,16 +103,16 @@ const FretboardFeature = () => {
     }, [stringCount]);
 
     return (
-        <div className="container animate-fade-in" style={{ paddingTop: '8rem', paddingBottom: '4rem', minHeight: '100vh' }}>
-            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>지판 학습</h1>
+        <div className="container animate-fade-in" style={{ paddingTop: '6rem', paddingBottom: '2rem', minHeight: '100vh' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>지판 학습</h1>
                 <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
                     베이스 기타의 핵심인 지판을 학습합니다. 음계를 클릭하여 전체 지판에서 위치를 확인하거나, 퀴즈 모드로 실력을 테스트해 보세요.
                 </p>
             </div>
 
             {/* Controls */}
-            <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '100%', overflowX: 'hidden' }}>
+            <div className="glass-panel" style={{ padding: '1rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '100%', overflowX: 'hidden' }}>
 
                 {/* String Count Toggle */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem', width: '100%' }}>
@@ -141,7 +152,7 @@ const FretboardFeature = () => {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
                     {/* Learning Controls */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                         <h3 style={{ fontSize: '1.1rem', marginRight: '0.5rem' }}>음계 찾기:</h3>
@@ -192,33 +203,51 @@ const FretboardFeature = () => {
                                 </button>
                             </>
                         ) : (
-                            <>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                    <div style={{ fontSize: '1.25rem', fontWeight: 700 }}>
-                                        타겟: <span className="text-gradient" style={{ fontSize: '1.5rem' }}>{targetNote}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                                        정답: <strong style={{ color: 'var(--text-primary)', fontSize: '1.2rem' }}>{score.correct}</strong>
+                                        <span style={{ color: 'var(--danger)', marginLeft: '0.75rem' }}>오답: <strong>{score.wrong}/3</strong></span>
                                     </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '2px' }}>
-                                            최고 기록: {bestScore}
-                                        </div>
-                                        <div style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>
-                                            점수: {score.correct} <span style={{ color: 'var(--danger)', marginLeft: '10px' }}>오답: {score.wrong}/3</span>
-                                        </div>
+                                    <div style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                        🏆 최고 {bestScore}점
                                     </div>
                                 </div>
-                                <button onClick={stopQuiz} className="btn btn-glass" style={{ width: '100%', padding: '0.5rem' }}>
+
+                                <div style={{
+                                    background: 'rgba(0,0,0,0.2)',
+                                    padding: '0.75rem 1rem',
+                                    borderRadius: 'var(--radius-md)',
+                                    textAlign: 'center',
+                                    border: '1px solid rgba(255,255,255,0.05)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.5rem'
+                                }}>
+                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                                        다음 위치를 찾으세요
+                                    </div>
+                                    <div className="text-gradient" style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.2 }}>
+                                        {targetNote ? `${targetNote.stringNumber}번현 ${targetNote.noteName}` : ''}
+                                    </div>
+                                </div>
+
+                                <button onClick={stopQuiz} className="btn btn-glass" style={{ width: '100%', padding: '0.7rem' }}>
                                     <RefreshCcw size={16} /> 퀴즈 종료
                                 </button>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {feedback && (
-                    <div className={`animate-fade-in ${feedback.includes('정답') ? 'text-gradient' : 'text-danger'}`} style={{ textAlign: 'center', marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.25rem', height: '2rem' }}>
-                        {feedback}
-                    </div>
-                )}
+                {/* Fixed height feedback container to prevent layout shift */}
+                <div style={{ height: '2.5rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {feedback ? (
+                        <div className={`animate-fade-in ${feedback.includes('정답') ? 'text-gradient' : 'text-danger'}`} style={{ fontWeight: 700, fontSize: '1.25rem', textAlign: 'center' }}>
+                            {feedback}
+                        </div>
+                    ) : null}
+                </div>
 
                 {/* The Fretboard Component */}
                 <Fretboard

@@ -63,19 +63,21 @@
 }
 
 .fret-marker-dot.double {
-    display: flex;
-    gap: 8px;
-    background-color: transparent;
+    width: 10px !important;
+    height: 10px !important;
+    background-color: transparent !important;
+    border-radius: 50%;
+    /* Cast a 10px dot 10px to the left, and 10px to the right */
+    box-shadow:
+        -10px 0 0 0 rgba(255, 255, 255, 0.2),
+        10px 0 0 0 rgba(255, 255, 255, 0.2);
 }
 
 .fret-marker-dot.double::before,
 .fret-marker-dot.double::after {
-    content: '';
-    width: 12px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
+    display: none;
 }
+
 
 .string-row {
     margin-bottom: 0;
@@ -193,6 +195,40 @@
     border-color: var(--accent);
     color: white;
     box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.note-badge.highlighted-wrong {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    background: var(--danger, #ef4444);
+    border-color: #fca5a5;
+    color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
 
 .standard-fret:hover .note-badge:not(.highlighted):not(.quiz-mode) {

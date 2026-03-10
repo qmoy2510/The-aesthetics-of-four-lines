@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Music, Activity, BookOpen, Menu, X } from 'lucide-react';
+import { Music, Activity, BookOpen, Menu, X, ChevronDown, Mic } from 'lucide-react';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState(null);
     const location = useLocation();
 
     useEffect(() => {
@@ -15,12 +16,35 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { name: '홈', path: '/', icon: <Music className="w-4 h-4" /> },
-        { name: '지판 학습', path: '/fretboard', icon: <Activity className="w-4 h-4" /> },
-        { name: '음계 매칭', path: '/note-matching', icon: <BookOpen className="w-4 h-4" /> },
-        { name: '악보 퀴즈', path: '/sheet-music', icon: <Music className="w-4 h-4" /> },
+    // Close mobile menu on route change
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+        setActiveDropdown(null);
+    }, [location.pathname]);
+
+    const navCategories = [
+        {
+            title: '이론',
+            icon: <BookOpen className="w-4 h-4" />,
+            links: [
+                { name: '지판 학습', path: '/fretboard', icon: <Activity className="w-4 h-4" /> },
+                { name: '스케일 학습', path: '/scale-study', icon: <BookOpen className="w-4 h-4" /> },
+                { name: '음계 매칭', path: '/note-matching', icon: <BookOpen className="w-4 h-4" /> },
+                { name: '악보 퀴즈', path: '/sheet-music', icon: <Music className="w-4 h-4" /> },
+            ]
+        },
+        {
+            title: '실전',
+            icon: <Music className="w-4 h-4" />,
+            links: [
+                { name: '음정 감지 연습', path: '/practice-pitch', icon: <Mic className="w-4 h-4" /> },
+            ]
+        }
     ];
+
+    const isPathInNavLinks = (path, category) => {
+        return category.links.some(link => link.path === path);
+    };
 
     return (
         <>
@@ -56,25 +80,104 @@ const Navbar = () => {
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden-mobile">
-                        <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', gap: '0.4rem',
-                                        fontWeight: 600,
-                                        fontSize: '1.05rem',
-                                        color: location.pathname === link.path ? 'white' : 'var(--text-secondary)',
-                                        transition: 'color 0.3s ease',
-                                        borderBottom: location.pathname === link.path ? '2px solid var(--primary)' : '2px solid transparent',
-                                        paddingBottom: '0.25rem'
-                                    }}
+                    <div className="hidden-mobile" style={{ height: '100%' }}>
+                        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', height: '100%' }}>
+                            <Link
+                                to="/"
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                    fontWeight: 600,
+                                    fontSize: '1.05rem',
+                                    color: location.pathname === '/' ? 'white' : 'var(--text-secondary)',
+                                    transition: 'color 0.3s ease',
+                                }}
+                            >
+                                <Music className="w-4 h-4" />
+                                홈
+                            </Link>
+
+                            {navCategories.map((category, idx) => (
+                                <div
+                                    key={idx}
+                                    style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}
+                                    onMouseEnter={() => setActiveDropdown(idx)}
+                                    onMouseLeave={() => setActiveDropdown(null)}
                                 >
-                                    {link.icon}
-                                    {link.name}
-                                </Link>
+                                    <button
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                            fontWeight: 600,
+                                            fontSize: '1.05rem',
+                                            color: isPathInNavLinks(location.pathname, category) || activeDropdown === idx ? 'white' : 'var(--text-secondary)',
+                                            transition: 'color 0.3s ease',
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            padding: '1rem 0' // Increase hit area
+                                        }}
+                                    >
+                                        {category.icon}
+                                        {category.title}
+                                        <ChevronDown size={16} style={{
+                                            transform: activeDropdown === idx ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s ease'
+                                        }} />
+                                    </button>
+
+                                    {/* Dropdown Menu */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '100%',
+                                        left: '50%',
+                                        transform: `translateX(-50%) translateY(${activeDropdown === idx ? '0' : '10px'})`,
+                                        opacity: activeDropdown === idx ? 1 : 0,
+                                        visibility: activeDropdown === idx ? 'visible' : 'hidden',
+                                        transition: 'all 0.2s ease-out',
+                                        background: 'rgba(2, 44, 34, 0.95)',
+                                        backdropFilter: 'blur(12px)',
+                                        border: '1px solid var(--glass-border)',
+                                        borderRadius: 'var(--radius-md)',
+                                        padding: '0.5rem',
+                                        minWidth: '180px',
+                                        boxShadow: 'var(--shadow-lg)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '0.25rem'
+                                    }}>
+                                        {category.links.map(link => (
+                                            <Link
+                                                key={link.path}
+                                                to={link.path}
+                                                style={{
+                                                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                                    padding: '0.75rem 1rem',
+                                                    borderRadius: 'var(--radius-sm)',
+                                                    color: location.pathname === link.path ? 'white' : 'var(--text-secondary)',
+                                                    background: location.pathname === link.path ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
+                                                    textDecoration: 'none',
+                                                    fontSize: '0.95rem',
+                                                    fontWeight: location.pathname === link.path ? '600' : '500',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    if (location.pathname !== link.path) {
+                                                        e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                                                        e.currentTarget.style.color = 'white';
+                                                    }
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    if (location.pathname !== link.path) {
+                                                        e.currentTarget.style.background = 'transparent';
+                                                        e.currentTarget.style.color = 'var(--text-secondary)';
+                                                    }
+                                                }}
+                                            >
+                                                {link.icon}
+                                                {link.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -83,54 +186,85 @@ const Navbar = () => {
                     <button
                         className="mobile-only"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{ color: 'var(--text-primary)', zIndex: 60, display: 'block' }}
+                        style={{ color: 'var(--text-primary)', zIndex: 60, display: 'block', background: 'none', border: 'none' }}
                     >
                         {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
                 </div>
             </nav>
 
-            {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
                 <div
                     style={{
                         position: 'fixed',
-                        top: '80px',
-                        left: '0',
-                        right: '0',
-                        height: 'calc(100vh - 80px)',
-                        padding: '2rem 1.5rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1.5rem',
-                        backgroundColor: '#022c22', // Emerald
-                        zIndex: 9999,
-                        borderTop: '1px solid var(--glass-border)'
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: '#022c22', // Solid Emerald background
+                        zIndex: 40,
+                        paddingTop: '6rem', // clear header
+                        paddingLeft: '1.5rem',
+                        paddingRight: '1.5rem',
+                        overflowY: 'auto'
                     }}
                 >
-                    {navLinks.map((link) => (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', paddingBottom: '4rem' }}>
                         <Link
-                            key={link.path}
-                            to={link.path}
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            to="/"
                             style={{
                                 display: 'flex', alignItems: 'center', gap: '1rem',
-                                fontSize: '1.25rem', fontWeight: 500,
-                                color: location.pathname === link.path ? '#10b981' : '#f8fafc',
-                                textDecoration: 'none'
+                                fontSize: '1.4rem', fontWeight: 600,
+                                color: location.pathname === '/' ? '#10b981' : '#f8fafc',
+                                textDecoration: 'none',
+                                paddingBottom: '1rem',
+                                borderBottom: '1px solid rgba(255,255,255,0.1)'
                             }}
                         >
-                            <div style={{
-                                backgroundColor: location.pathname === link.path ? 'rgba(16, 185, 129, 0.4)' : 'rgba(30, 41, 59, 0.6)',
-                                padding: '0.5rem', borderRadius: '0.375rem'
-                            }}>
-                                {link.icon}
-                            </div>
-                            <span style={{ color: location.pathname === link.path ? '#10b981' : '#f8fafc' }}>
-                                {link.name}
-                            </span>
+                            <Music size={24} />
+                            홈
                         </Link>
-                    ))}
+
+                        {navCategories.map((category, idx) => (
+                            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                <div style={{
+                                    fontSize: '1rem',
+                                    color: 'var(--text-muted)',
+                                    fontWeight: '700',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    {category.icon}
+                                    {category.title}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingLeft: '1rem' }}>
+                                    {category.links.map(link => (
+                                        <Link
+                                            key={link.path}
+                                            to={link.path}
+                                            style={{
+                                                display: 'flex', alignItems: 'center', gap: '1rem',
+                                                fontSize: '1.25rem', fontWeight: 500,
+                                                color: location.pathname === link.path ? '#10b981' : '#f8fafc',
+                                                textDecoration: 'none',
+                                                padding: '0.75rem',
+                                                borderRadius: '0.5rem',
+                                                backgroundColor: location.pathname === link.path ? 'rgba(16, 185, 129, 0.1)' : 'transparent'
+                                            }}
+                                        >
+                                            <div style={{ opacity: location.pathname === link.path ? 1 : 0.7 }}>
+                                                {React.cloneElement(link.icon, { size: 20 })}
+                                            </div>
+                                            {link.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </>

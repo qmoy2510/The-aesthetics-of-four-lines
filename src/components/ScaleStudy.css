@@ -1,0 +1,43 @@
+/* Scale Study Specific Styles */
+
+.scale-board-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Learning Mode Animations */
+.scale-board-wrapper.learning-active .fret-cell .note-badge {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.scale-board-wrapper.learning-active .fret-cell:hover .note-badge {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Quiz Mode Specifics */
+.scale-board-wrapper.quiz-active .open-string-cell {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.8);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.scale-board-wrapper.quiz-active .note-badge.highlighted {
+    animation: pulse-ring 0.6s ease-out;
+}

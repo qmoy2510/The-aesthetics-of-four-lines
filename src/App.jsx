@@ -3,8 +3,10 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import FretboardFeature from './components/FretboardFeature';
+import ScaleStudy from './components/ScaleStudy';
 import NoteMatching from './components/NoteMatching';
 import SheetMusicQuiz from './components/SheetMusicQuiz';
+import ComingSoon from './components/ComingSoon';
 import './index.css';
 
 function App() {
@@ -15,9 +17,12 @@ function App() {
         <main style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
           <Routes>
             <Route path="/" element={<Home />} />
+            {/* Theory Routes */}
             <Route path="/fretboard" element={<FretboardFeature />} />
+            <Route path="/scale-study" element={<ScaleStudy />} />
             <Route path="/note-matching" element={<NoteMatching />} />
             <Route path="/sheet-music" element={<SheetMusicQuiz />} />
+            <Route path="/practice-pitch" element={<ComingSoon title="음정 감지 연습" description="마이크를 통해 실제 베이스 기타 소리를 인식하여, 화면에 표시된 음정과 일치하는지 실시간으로 판별해주는 연습 모드입니다. 곧 업데이트 됩니다!" />} />
           </Routes>
         </main>
 
