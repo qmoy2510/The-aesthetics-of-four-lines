@@ -72,19 +72,6 @@ const Fretboard = ({
         onNoteClick && onNoteClick(note, sIdx, fIdx);
     };
 
-    // Helper function to render fret markers
-    const renderFretMarker = (sIdx, fIdx) => {
-        // Only render markers on the highest string (sIdx === 0) for simplicity, or adjust as needed
-        if (sIdx === 0) {
-            if (fretMarkers.includes(fIdx) && fIdx !== 12) {
-                return <div className="fret-marker-dot"></div>;
-            }
-            if (fIdx === 12) {
-                return <div className="fret-marker-dot double"></div>;
-            }
-        }
-        return null;
-    };
 
     return (
         <div className="fretboard-container glass-panel">
@@ -151,9 +138,6 @@ const Fretboard = ({
                                 >
                                     {/* Fret wire */}
                                     {fIdx > 0 && <div className="fret-wire"></div>}
-
-                                    {/* Fret markers (dots) */}
-                                    {renderFretMarker(sIdx, fIdx)}
 
                                     {/* Note display */}
                                     <div className={`note-badge ${highlightClass} ${rootClass} ${isQuizMode ? 'quiz-mode' : ''}`}>
