@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && copy /Y dist\\index.html .\\index.html && xcopy /E /I /Y dist\\assets .\\assets && rmdir /S /Q dist",
+    "build": "vite build && copy /Y dist\\index.html .\\index.html && copy /Y dist\\favicon.png .\\favicon.png && xcopy /E /I /Y dist\\assets .\\assets && rmdir /S /Q dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
