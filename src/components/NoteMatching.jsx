@@ -172,6 +172,7 @@ const NoteMatching = () => {
                             justifyContent: 'center',
                             fontSize: '5rem',
                             fontWeight: 800,
+                            overflow: 'hidden',
                             color: isQuizMode ? 'white' : 'transparent',
                             boxShadow: isQuizMode ? '0 0 30px rgba(16, 185, 129, 0.4)' : 'none',
                             transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
@@ -192,7 +193,7 @@ const NoteMatching = () => {
                     </div>
 
                     {/* Feedback Message */}
-                    <div style={{ height: '2rem', marginBottom: '2rem', fontSize: '1.25rem', fontWeight: 700, width: '100%', textAlign: 'center' }}>
+                    <div style={{ height: isQuizMode ? '2rem' : '0', marginBottom: isQuizMode ? '2rem' : '0', overflow: 'hidden', transition: 'all 0.3s ease', fontSize: '1.25rem', fontWeight: 700, width: '100%', textAlign: 'center' }}>
                         {feedback ? (
                             <span className={`animate-fade-in ${feedback.includes('정답') ? 'text-gradient' : 'text-danger'}`}>
                                 {feedback}
@@ -205,7 +206,7 @@ const NoteMatching = () => {
                     </div>
 
                     {/* Answer Buttons (Piano Keyboard) */}
-                    <div className="piano-keyboard animate-fade-in">
+                    <div className="piano-keyboard animate-fade-in" style={{ marginTop: '0', pointerEvents: isQuizMode ? 'auto' : 'none', opacity: isQuizMode ? 1 : 0.5 }}>
                         {WHITE_KEYS.map((keyInfo, idx) => {
                             const whiteDisplay = quizType === 'engToSolfege' ? keyInfo.solfege : keyInfo.eng;
                             const whiteFullValue = NOTE_MAP.find(n => n.eng === keyInfo.eng);
