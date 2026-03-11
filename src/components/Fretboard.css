@@ -365,12 +365,11 @@
     }
 
     /* Frets (Wires) */
-    .standard-fret {
-        border-right: none;
+    .fret-cell:not(.open-string-cell) {
         border-bottom: 2px solid #9ca3af; /* Fret wire at the bottom of the cell */
     }
 
-    .standard-fret:last-child {
+    .fret-cell:not(.open-string-cell):last-child {
         border-bottom: none;
     }
 
