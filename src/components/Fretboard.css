@@ -268,41 +268,147 @@
 }
 
 /* ==========================================================================
-   Mobile Responsiveness for Fretboard
+   Mobile Responsiveness for Fretboard (Vertical Layout)
    ========================================================================== */
 @media (max-width: 768px) {
     .fretboard-container {
-        padding: 1rem 0;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
+        padding: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        overflow-y: visible; /* Let it stretch downwards naturally */
+        border-radius: var(--radius-lg);
+        border-left: 1px solid var(--glass-border);
+        border-right: 1px solid var(--glass-border);
+        max-width: 400px; /* Keep it constrained like a neck */
+        margin: 0 auto;
     }
 
-    /* Provide a visual cue that it can be scrolled */
     .fretboard-container::after {
-        content: "👉 스와이프하여 탐색";
-        position: absolute;
-        top: 0.5rem;
-        right: 1rem;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        opacity: 0.7;
-        pointer-events: none;
+        display: none; /* Swipe hint no longer necessary */
+    }
+
+    .fretboard-row {
+        flex-direction: column;
+    }
+
+    .fret-numbers {
+        margin-bottom: 0;
+        margin-right: 0.75rem;
+        flex: 0 0 30px;
+        align-items: center;
+    }
+
+    .fretboard-body {
+        display: flex;
+        flex-direction: row-reverse; /* Orders strings: Low E on left, High G on right */
+        flex: 1;
+        background: rgba(6, 78, 59, 0.4);
+        border-radius: 8px;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .string-row {
+        flex: 1;
+        background: transparent;
+        border-bottom: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.08); /* Vertical separators */
+        border-radius: 0 !important; 
+    }
+
+    .string-row:last-child {
+        border-left: none; /* E string has no left border */
     }
 
     .fret-cell {
-        min-width: 50px;
-        height: 50px;
+        min-width: unset;
+        width: 100%;
+        height: 55px; /* Vertical target size */
+        min-height: 55px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .header {
+        width: 100%;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .open-string-cell {
-        min-width: 60px;
-        flex: 0 0 60px;
+        min-width: unset;
+        width: 100%;
+        min-height: 55px;
+        flex: 0 0 55px;
+        border-right: none;
+        border-bottom: 6px solid #d1d5db; /* The Nut at the top */
+        border-radius: 0;
+        background: rgba(0,0,0,0.2);
+    }
+    
+    .fret-numbers .open-string-cell {
+        border-bottom: none;
+        background: transparent;
+    }
+
+    /* Frets (Wires) */
+    .standard-fret {
+        border-right: none;
+    }
+
+    .fret-wire {
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: -1px;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to bottom, #9ca3af, #d1d5db, #9ca3af);
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Strings (Lines) */
+    .string-line {
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        background: linear-gradient(to right, #d1d5db, #9ca3af, #d1d5db);
+        box-shadow: 2px 0 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .string-line-1 { width: 2px; height: 100%; }
+    .string-line-2 { width: 3px; height: 100%; }
+    .string-line-3 { width: 4px; height: 100%; }
+    .string-line-4 { width: 5px; height: 100%; }
+    .string-line-5 { width: 6px; height: 100%; }
+    .string-line-6 { width: 7px; height: 100%; }
+
+    /* Fret Markers */
+    .fret-marker-dot {
+        bottom: auto;
+        top: 50%;
+        right: -8px; 
+        left: auto;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+    }
+
+    .fret-marker-dot.double {
+        width: 8px !important;
+        height: 8px !important;
+        box-shadow: 0 -8px 0 0 rgba(255,255,255,0.2), 0 8px 0 0 rgba(255,255,255,0.2);
     }
 
     .note-badge {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
     }
 }
