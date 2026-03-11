@@ -232,7 +232,7 @@ const FretboardFeature = () => {
                                     </div>
                                 </div>
 
-                                <button onClick={stopQuiz} className="btn btn-glass" style={{ width: '100%', padding: '0.7rem' }}>
+                <button onClick={stopQuiz} className="btn btn-glass" style={{ width: '100%', padding: '0.7rem' }}>
                                     <RefreshCcw size={16} /> 퀴즈 종료
                                 </button>
                             </div>
@@ -240,23 +240,25 @@ const FretboardFeature = () => {
                     </div>
                 </div>
 
-                {/* Fixed height feedback container to prevent layout shift */}
-                <div style={{ height: '2.5rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {feedback ? (
-                        <div className={`animate-fade-in ${feedback.includes('정답') ? 'text-gradient' : 'text-danger'}`} style={{ fontWeight: 700, fontSize: '1.25rem', textAlign: 'center' }}>
-                            {feedback}
-                        </div>
-                    ) : null}
-                </div>
+            </div> {/* Close glass-panel here */}
 
-                {/* The Fretboard Component */}
+            {/* Fixed height feedback container to prevent layout shift */}
+            <div style={{ height: '2.5rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {feedback ? (
+                    <div className={`animate-fade-in ${feedback.includes('정답') ? 'text-gradient' : 'text-danger'}`} style={{ fontWeight: 700, fontSize: '1.25rem', textAlign: 'center' }}>
+                        {feedback}
+                    </div>
+                ) : null}
+            </div>
+
+            {/* The Fretboard Component */}
+            <div className="fretboard-wrapper" style={{ position: 'relative', width: '100%' }}>
                 <Fretboard
                     highlightedNote={highlightedNote}
                     isQuizMode={isQuizMode}
                     onNoteClick={handleNoteClick}
                     stringCount={stringCount}
                 />
-
             </div>
         </div>
     );
