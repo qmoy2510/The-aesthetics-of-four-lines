@@ -91,6 +91,99 @@
     pointer-events: none;
 }
 
+.piano-keyboard {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    background: rgba(2, 44, 34, 0.4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(12px);
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.piano-key-container {
+    position: relative;
+    display: flex;
+}
+
+.piano-key {
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transition: all 0.15s ease-out;
+    user-select: none;
+    outline: none;
+}
+
+.piano-key.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.piano-key.white-key {
+    width: 65px;
+    height: 220px;
+    background: #f8fafc;
+    /* pale white */
+    border: 1px solid #cbd5e1;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 -4px 6px rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+    /* dark text */
+}
+
+.piano-key.white-key.active:hover {
+    background: #e2e8f0;
+}
+
+.piano-key.white-key.active:active {
+    background: #cbd5e1;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    height: 216px;
+    /* Press down visual effect */
+}
+
+.piano-key.black-key {
+    position: absolute;
+    top: 0;
+    right: -24px;
+    /* Extends right by half its width plus half gap */
+    width: 44px;
+    height: 140px;
+    background: #1e293b;
+    /* dark blue/black */
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+    color: #f8fafc;
+    z-index: 10;
+}
+
+.piano-key.black-key.active:hover {
+    background: #334155;
+}
+
+.piano-key.black-key.active:active {
+    background: #0f172a;
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6);
+    height: 138px;
+}
+
+.key-label {
+    margin-bottom: 1.25rem;
+    font-weight: 800;
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
 .black-label {
     font-size: 1rem;
     margin-bottom: 2rem;
@@ -119,41 +212,104 @@
     animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
 }
 
+/* Responsive panels for quiz components */
+.responsive-quiz-panel {
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.quiz-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quiz-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    white-space: nowrap;
+}
+
 /* ==========================================================================
-   Mobile Responsiveness for Piano Keyboard
+   Mobile Responsiveness for Piano Keyboard & Panels
    ========================================================================== */
 @media (max-width: 768px) {
-    .piano-keyboard {
+    .responsive-quiz-panel {
         padding: 1rem 0.5rem;
+    }
+
+    .quiz-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .quiz-header-left,
+    .quiz-header-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .quiz-header-left button,
+    .quiz-header-left select {
+        width: 100%;
+    }
+
+    .quiz-header-controls > div {
+        text-align: center !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .quiz-header-controls button {
+        width: 100%;
+    }
+
+    .piano-keyboard {
+        padding: 1rem 0.25rem;
         gap: 2px;
     }
 
     .piano-key.white-key {
-        width: 48px;
-        height: 180px;
+        width: 50px;
+        height: 190px;
     }
 
     .piano-key.white-key.active:active {
-        height: 176px;
+        height: 186px;
     }
 
     .key-label {
         font-size: 1.1rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.8rem;
     }
 
     .piano-key.black-key {
-        width: 34px;
-        height: 110px;
-        right: -18px;
+        width: 35px;
+        height: 115px;
+        right: -19px;
     }
 
     .piano-key.black-key.active:active {
-        height: 108px;
+        height: 112px;
     }
 
     .black-label {
         font-size: 1rem;
-        margin-bottom: 1.25rem;
+        margin-bottom: 1rem;
     }
 }

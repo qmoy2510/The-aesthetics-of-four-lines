@@ -82,7 +82,7 @@ const SheetMusicQuiz = () => {
     };
 
     const handleAnswerClick = (selectedEng) => {
-        if (!isQuizMode || currentIndex >= quizSequence.length) return;
+        if (!isQuizMode || currentIndex >= quizSequence.length || score.wrong >= 3) return;
 
         const currentTarget = quizSequence[currentIndex];
 
@@ -138,7 +138,16 @@ const SheetMusicQuiz = () => {
         const spacingX = noteCount > 1 ? Math.min(80, availableWidth / (noteCount - 1)) : 80;
 
         return (
-            <div style={{ width: '100%', overflowX: 'auto', margin: '2rem 0', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ 
+                width: '100%', 
+                margin: isQuizMode ? '2rem 0' : '0', 
+                display: 'flex', 
+                justifyContent: 'center',
+                maxHeight: isQuizMode ? '500px' : '0',
+                opacity: isQuizMode ? 1 : 0,
+                transition: 'max-height 0.4s ease, opacity 0.4s ease, margin 0.4s ease',
+                overflow: 'hidden'
+            }}>
                 <svg
                     width="100%" height="auto" viewBox="0 0 600 200"
                     className={isShaking ? 'shake' : ''}
@@ -219,11 +228,11 @@ const SheetMusicQuiz = () => {
                 </p>
             </div>
 
-            <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="glass-panel responsive-quiz-panel" style={{ gap: '1rem' }}>
 
                 {/* Header / Controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div className="quiz-header">
+                    <div className="quiz-header-left">
                         <select
                             value={difficulty}
                             onChange={(e) => { setDifficulty(e.target.value); stopQuiz(); }}
@@ -236,8 +245,8 @@ const SheetMusicQuiz = () => {
                         </select>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <div style={{ textAlign: 'right' }}>
+                    <div className="quiz-header-controls">
+                        <div>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>🏆 세트 연속 클리어 최고 기록</div>
                             <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--primary)' }}>{bestScore} 연속</div>
                         </div>
@@ -266,7 +275,7 @@ const SheetMusicQuiz = () => {
                 )}
 
                 {/* Feedback Area */}
-                <div style={{ height: '2rem', textAlign: 'center', marginTop: '1rem', fontWeight: 700, fontSize: '1.25rem' }}>
+                <div style={{ height: isQuizMode ? '2rem' : '0', overflow: 'hidden', textAlign: 'center', marginTop: isQuizMode ? '1rem' : '0', fontWeight: 700, fontSize: '1.25rem', transition: 'all 0.3s ease' }}>
                     {feedback ? (
                         <span className={`animate-fade-in ${feedback.includes('정답') || feedback.includes('클리어') ? 'text-gradient' : 'text-danger'}`}>
                             {feedback}

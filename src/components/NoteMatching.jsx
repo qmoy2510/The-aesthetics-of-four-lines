@@ -72,7 +72,7 @@ const NoteMatching = () => {
     };
 
     const handleAnswerClick = (answerOption) => {
-        if (!isQuizMode || !targetNote) return;
+        if (!isQuizMode || !targetNote || score.wrong >= 3) return;
 
         // Determine correct answer based on quiz type
         const correctAnswer = quizType === 'engToSolfege' ? targetNote.solfege : targetNote.eng;
@@ -120,16 +120,16 @@ const NoteMatching = () => {
                 </p>
             </div>
 
-            <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="glass-panel responsive-quiz-panel" style={{ gap: '2rem' }}>
 
                 {/* Header Controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1.5rem' }}>
+                <div className="quiz-header">
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div className="quiz-header-left">
                         <button
                             onClick={toggleQuizType}
-                            className="btn btn-outline"
-                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem' }}
+                            className="btn btn-glass"
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.6rem 1rem' }}
                             disabled={isQuizMode}
                         >
                             <Shuffle size={16} />
@@ -137,8 +137,8 @@ const NoteMatching = () => {
                         </button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <div style={{ textAlign: 'right' }}>
+                    <div className="quiz-header-controls">
+                        <div>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>🏆 {quizType === 'engToSolfege' ? '영어→도레미' : '도레미→영어'} 최고 기록</div>
                             <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--primary)' }}>{bestScore}점</div>
                         </div>
@@ -156,13 +156,14 @@ const NoteMatching = () => {
                 </div>
 
                 {/* Quiz Area */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem 0', minHeight: '350px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: isQuizMode ? '2rem 0' : '0', minHeight: isQuizMode ? '350px' : '0', transition: 'all 0.3s ease', overflow: 'hidden' }}>
 
                     {/* Target Display */}
-                    <div style={{ marginBottom: '3rem', position: 'relative' }}>
+                    <div style={{ marginBottom: isQuizMode ? '3rem' : '0', position: 'relative', transition: 'all 0.3s ease' }}>
                         <div style={{
-                            width: '150px',
-                            height: '150px',
+                            width: isQuizMode ? '150px' : '0',
+                            height: isQuizMode ? '150px' : '0',
+                            opacity: isQuizMode ? 1 : 0,
                             borderRadius: '20px',
                             background: isQuizMode ? 'var(--primary)' : 'var(--glass-bg)',
                             border: `2px solid ${isQuizMode ? 'var(--primary-glow)' : 'var(--glass-border)'}`,
@@ -171,9 +172,9 @@ const NoteMatching = () => {
                             justifyContent: 'center',
                             fontSize: '5rem',
                             fontWeight: 800,
-                            color: isQuizMode ? 'white' : 'var(--text-muted)',
+                            color: isQuizMode ? 'white' : 'transparent',
                             boxShadow: isQuizMode ? '0 0 30px rgba(16, 185, 129, 0.4)' : 'none',
-                            transition: 'all 0.3s ease'
+                            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                         }}>
                             {displayTarget}
                         </div>
