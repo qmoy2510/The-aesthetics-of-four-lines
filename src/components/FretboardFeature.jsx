@@ -252,7 +252,7 @@ const FretboardFeature = () => {
             </div>
 
             {/* The Fretboard Component */}
-            <div className="fretboard-wrapper" style={{ position: 'relative', width: '100%' }}>
+            <div className="fretboard-wrapper" style={{ position: 'relative', width: '100%', overflowX: 'auto', display: 'flex', justifyContent: 'center' }}>
                 <Fretboard
                     highlightedNote={highlightedNote}
                     isQuizMode={isQuizMode}
