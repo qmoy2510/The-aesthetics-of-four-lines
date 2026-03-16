@@ -1,32 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Target, Shuffle, RefreshCcw } from 'lucide-react';
 import './NoteMatching.css';
-
-// Note mappings (excluding sharp/flat for basic learning, can be expanded later)
-const NOTE_MAP = [
-    { eng: 'C', solfege: '도' },
-    { eng: 'C#', solfege: '도#' },
-    { eng: 'D', solfege: '레' },
-    { eng: 'D#', solfege: '레#' },
-    { eng: 'E', solfege: '미' },
-    { eng: 'F', solfege: '파' },
-    { eng: 'F#', solfege: '파#' },
-    { eng: 'G', solfege: '솔' },
-    { eng: 'G#', solfege: '솔#' },
-    { eng: 'A', solfege: '라' },
-    { eng: 'A#', solfege: '라#' },
-    { eng: 'B', solfege: '시' }
-];
-
-const WHITE_KEYS = [
-    { eng: 'C', solfege: '도', sharpEng: 'C#', sharpSolfege: '도#' },
-    { eng: 'D', solfege: '레', sharpEng: 'D#', sharpSolfege: '레#' },
-    { eng: 'E', solfege: '미', sharpEng: null, sharpSolfege: null },
-    { eng: 'F', solfege: '파', sharpEng: 'F#', sharpSolfege: '파#' },
-    { eng: 'G', solfege: '솔', sharpEng: 'G#', sharpSolfege: '솔#' },
-    { eng: 'A', solfege: '라', sharpEng: 'A#', sharpSolfege: '라#' },
-    { eng: 'B', solfege: '시', sharpEng: null, sharpSolfege: null }
-];
+import { NOTE_MAP, WHITE_KEYS } from '../constants';
 
 const NoteMatching = () => {
     const [isQuizMode, setIsQuizMode] = useState(false);

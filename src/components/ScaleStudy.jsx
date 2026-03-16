@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Fretboard, { TUNING_PRESETS, getNoteAtFret } from './Fretboard';
-import { Target, Eye, EyeOff, RefreshCcw, Play } from 'lucide-react';
+import { Target, RefreshCcw, Play } from 'lucide-react';
 import './ScaleStudy.css';
-
-const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+import { NOTES } from '../constants';
 
 // Define intervals for different scales (in semitones)
 const SCALES = {

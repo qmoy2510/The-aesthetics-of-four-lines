@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Target, RefreshCcw } from 'lucide-react';
 import './NoteMatching.css';
+import { WHITE_KEYS } from '../constants';
 
-// 1. Bass Clef Notes Mapping (Y coordinates relative to the 200px height SVG)
+// Bass Clef Notes Mapping (Y coordinates relative to the 200px height SVG)
 const BASS_NOTES = [
     { eng: 'E', y: 140 }, // Under staff
     { eng: 'F', y: 130 },
@@ -17,16 +18,6 @@ const BASS_NOTES = [
     { eng: 'A', y: 40 },  // Top line
     { eng: 'B', y: 30 },  // Above staff
     { eng: 'C', y: 20 },  // Above staff (Middle C)
-];
-
-const WHITE_KEYS = [
-    { eng: 'C', solfege: '도', sharpEng: 'C#', sharpSolfege: '도#' },
-    { eng: 'D', solfege: '레', sharpEng: 'D#', sharpSolfege: '레#' },
-    { eng: 'E', solfege: '미', sharpEng: null, sharpSolfege: null },
-    { eng: 'F', solfege: '파', sharpEng: 'F#', sharpSolfege: '파#' },
-    { eng: 'G', solfege: '솔', sharpEng: 'G#', sharpSolfege: '솔#' },
-    { eng: 'A', solfege: '라', sharpEng: 'A#', sharpSolfege: '라#' },
-    { eng: 'B', solfege: '시', sharpEng: null, sharpSolfege: null }
 ];
 
 const DIFFICULTY_MAP = {

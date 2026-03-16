@@ -81,10 +81,10 @@ const Home = () => {
                             delay="200"
                         />
                         <FeatureCard
-                            title="악보 읽기 퀴즈 (Coming Soon)"
-                            description="실제 악보를 보고 해당하는 베이스 음을 지판에서 찾아내는 궁극의 훈련 모드입니다. (추후 업데이트 예정)"
+                            title="악보 읽기 퀴즈"
+                            description="낮은자리표(Bass Clef)를 보고 정확한 음계를 읽어내는 초견 능력을 기릅니다. 난이도 별로 음표 수를 조절하며 도전해보세요."
                             icon={<Music color="var(--success)" size={32} />}
-                            path="/" // To be implemented later
+                            path="/sheet-music"
                             delay="300"
                         />
                     </div>

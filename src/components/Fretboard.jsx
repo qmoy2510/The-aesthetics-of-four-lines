@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { Target, RefreshCw } from 'lucide-react';
+import React, { useMemo } from 'react';
 import './Fretboard.css';
-
-// Notes array (chromatic scale)
-const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+import { NOTES } from '../constants';
 
 // Tuning base for 4, 5, and 6-string basses (from highest pitch to lowest pitch string)
 export const TUNING_PRESETS = {
@@ -56,12 +53,12 @@ const generateFretboardContext = (stringCount) => {
 const Fretboard = ({
     highlightedNote,
     isQuizMode = false,
-    onNoteClick, // Keep onNoteClick as it's used in the original logic
+    onNoteClick,
     stringCount = 4,
     showNotes = true,
-    rootNote = null // Add rootNote prop to allow distinct styling
+    rootNote = null
 }) => {
-    const fretboardData = generateFretboardContext(stringCount);
+    const fretboardData = useMemo(() => generateFretboardContext(stringCount), [stringCount]);
 
     // Fret markers (dots) on bass: usually at frets 3, 5, 7, 9, 12
     const fretMarkers = [3, 5, 7, 9, 12];
@@ -156,4 +153,4 @@ const Fretboard = ({
     );
 };
 
-export default Fretboard;
+export default React.memo(Fretboard);

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Fretboard, { TUNING_PRESETS, getNoteAtFret } from './Fretboard';
-import { Target, Eye, EyeOff, RefreshCcw } from 'lucide-react';
-
-const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+import { Target, EyeOff, RefreshCcw } from 'lucide-react';
+import { NOTES } from '../constants';
 
 const FretboardFeature = () => {
     const [highlightedNote, setHighlightedNote] = useState(null);

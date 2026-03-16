@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { AMDF } from 'pitchfinder';
-
-const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+import { NOTES } from '../constants';
 const A4_FREQ = 440;
 const A4_IDX = 69;
 
@@ -11,7 +10,7 @@ export const freqToNote = (freq) => {
     
     const noteNum = Math.round(12 * Math.log2(freq / A4_FREQ) + A4_IDX);
     const octave = Math.floor(noteNum / 12) - 1;
-    const noteName = NOTE_NAMES[noteNum % 12];
+    const noteName = NOTES[noteNum % 12];
     
     return {
         note: noteName,
